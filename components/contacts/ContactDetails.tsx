@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Contact } from '@/types/crm';
 
-const FIELDS: { key: keyof Contact; label: string; type?: string }[] = [
+const FIELDS: { key: keyof Contact; label: string; type?: string; multiline?: boolean; fullWidth?: boolean }[] = [
   { key: 'email', label: 'Email', type: 'email' },
   { key: 'phone', label: 'Phone' },
   { key: 'company', label: 'Company' },
@@ -16,8 +16,8 @@ const FIELDS: { key: keyof Contact; label: string; type?: string }[] = [
   { key: 'birthday', label: 'Birthday', type: 'date' },
   { key: 'anniversary', label: 'Anniversary', type: 'date' },
   { key: 'kids', label: 'Kids' },
-  { key: 'notes', label: 'Notes' },
-  { key: 'interesting_facts', label: 'Interesting Facts' },
+  { key: 'notes', label: 'Notes', multiline: true, fullWidth: true },
+  { key: 'interesting_facts', label: 'Interesting Facts', multiline: true, fullWidth: true },
 ];
 
 export function ContactDetails({ contact, onSave }: { contact: Contact; onSave: (c: Contact) => void }) {
@@ -48,18 +48,27 @@ export function ContactDetails({ contact, onSave }: { contact: Contact; onSave: 
         )}
       </div>
       <div className="grid grid-cols-2 gap-3">
-        {FIELDS.map(({ key, label, type }) => (
-          <div key={key} className="col-span-1">
+        {FIELDS.map(({ key, label, type, multiline, fullWidth }) => (
+          <div key={key} className={fullWidth ? 'col-span-2' : 'col-span-1'}>
             <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">{label}</label>
             {editing ? (
-              <input
-                type={type ?? 'text'}
-                value={String(form[key] ?? '')}
-                onChange={(e) => setForm({ ...form, [key]: e.target.value })}
-                className="w-full border border-gray-300 rounded px-2 py-1 text-sm mt-1"
-              />
+              multiline ? (
+                <textarea
+                  value={String(form[key] ?? '')}
+                  onChange={(e) => setForm({ ...form, [key]: e.target.value })}
+                  rows={3}
+                  className="w-full border border-gray-300 rounded px-2 py-1 text-sm mt-1"
+                />
+              ) : (
+                <input
+                  type={type ?? 'text'}
+                  value={String(form[key] ?? '')}
+                  onChange={(e) => setForm({ ...form, [key]: e.target.value })}
+                  className="w-full border border-gray-300 rounded px-2 py-1 text-sm mt-1"
+                />
+              )
             ) : (
-              <div className="text-sm text-gray-900 mt-1">{String(contact[key] ?? '—')}</div>
+              <div className="text-sm text-gray-900 mt-1 whitespace-pre-wrap">{String(contact[key] ?? '—')}</div>
             )}
           </div>
         ))}

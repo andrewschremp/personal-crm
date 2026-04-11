@@ -12,6 +12,12 @@ export function ContactModal({ contact: initial, onClose }: { contact: Contact; 
   const [tab, setTab] = useState<Tab>('details');
   const [generating, setGenerating] = useState(false);
 
+  const handleDelete = async () => {
+    if (!window.confirm(`Delete ${contact.name}? This cannot be undone.`)) return;
+    await fetch(`/api/contacts/${contact.id}`, { method: 'DELETE' });
+    onClose();
+  };
+
   const generateBrief = async () => {
     setGenerating(true);
     await fetch('/api/briefs/trigger', {
@@ -34,6 +40,12 @@ export function ContactModal({ contact: initial, onClose }: { contact: Contact; 
             )}
           </div>
           <div className="flex gap-2">
+            <button
+              onClick={handleDelete}
+              className="text-sm text-red-600 hover:text-red-800 px-3 py-1.5 rounded border border-red-200 hover:border-red-400"
+            >
+              Delete
+            </button>
             <button
               onClick={generateBrief}
               disabled={generating}

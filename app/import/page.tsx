@@ -2,13 +2,13 @@
 import { useState } from 'react';
 import { FileUpload } from '@/components/import/FileUpload';
 import { DedupResolver } from '@/components/import/DedupResolver';
-import { DuplicateMatch } from '@/types/crm';
+import { DuplicateMatch, ImportedContact } from '@/types/crm';
 
 export default function ImportPage() {
   const [matches, setMatches] = useState<DuplicateMatch[] | null>(null);
   const [result, setResult] = useState<{ created: number; merged: number } | null>(null);
 
-  const handleParsed = (_source: string, data: { imported: unknown[]; matches: DuplicateMatch[] }) => {
+  const handleParsed = (_source: string, data: { imported: ImportedContact[]; matches: DuplicateMatch[] }) => {
     setMatches(data.matches);
     setResult(null);
   };

@@ -1,5 +1,6 @@
 'use client';
 import { useRef } from 'react';
+import { DuplicateMatch, ImportedContact } from '@/types/crm';
 
 const sources = [
   { id: 'google', label: 'Google Contacts', hint: 'CSV export from contacts.google.com', accept: '.csv' },
@@ -8,7 +9,7 @@ const sources = [
 ];
 
 export function FileUpload({ onParsed }: {
-  onParsed: (source: string, data: { imported: unknown[]; matches: unknown[] }) => void
+  onParsed: (source: string, data: { imported: ImportedContact[]; matches: DuplicateMatch[] }) => void
 }) {
   const fileRefs = useRef<Record<string, HTMLInputElement | null>>({});
 

@@ -3,6 +3,7 @@ import { createServerClient } from '@/lib/supabase';
 import { parseGoogleContactsCsv, parseLinkedInCsv } from '@/lib/import/csv-parser';
 import { parseVcard } from '@/lib/import/vcard-parser';
 import { findDuplicates } from '@/lib/dedup';
+import { Contact } from '@/types/crm';
 
 export async function POST(req: NextRequest) {
   const formData = await req.formData();
@@ -20,9 +21,9 @@ export async function POST(req: NextRequest) {
   else return NextResponse.json({ error: 'Unknown source type' }, { status: 400 });
 
   const supabase = createServerClient();
-  const { data: existing, error } = await supabase.from('documents').select('id, name, email');
+  const { data: existing, error } = await supabase.from('documents').select('id, name, email, created_at');
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-  const matches = findDuplicates(imported, existing ?? []);
+  const matches = findDuplicates(imported, (existing ?? []) as Contact[]);
   return NextResponse.json({ imported, matches });
 }

@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
   else return NextResponse.json({ error: 'Unknown source type' }, { status: 400 });
 
   const supabase = createServerClient();
-  const { data: existing, error } = await supabase.from('documents').select('id, name, email, created_at');
+  const { data: existing, error } = await supabase.from('contacts').select('*');
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
   const matches = findDuplicates(imported, (existing ?? []) as Contact[]);

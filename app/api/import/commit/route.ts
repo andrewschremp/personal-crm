@@ -30,11 +30,11 @@ export async function POST(req: NextRequest) {
     };
 
     if (d.action === 'create') {
-      const { data, error } = await supabase.from('documents').insert(payload).select().single();
+      const { data, error } = await supabase.from('contacts').insert(payload).select().single();
       if (!error && data) created.push(data);
     } else if (d.action === 'merge' && d.merge_id) {
       const { data, error } = await supabase
-        .from('documents')
+        .from('contacts')
         .update(payload)
         .eq('id', d.merge_id)
         .select()

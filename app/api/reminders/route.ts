@@ -19,9 +19,27 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const supabase = createServerClient();
   const body = await req.json();
-  const { data, error } = await supabase.from('contact_reminders').insert(body).select().single();
+  // Map API fields to table columns
+  const payload = {
+    contact_id: body.contact_id,
+    reminder_date: body.reminder_date,
+    message: body.note || body.message || '',
+    status: body.completed ? 'completed' : 'pending',
+    reminder_type: 'follow_up',
+  };
+  const { data, error } = await supabase.from('contact_reminders').insert(payload).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json(data, { status: 201 });
+}
+
+export async function PATCH(req: NextRequest) {
+  const supabase = createServerClient();
+  const body = await req.json();
+  const { id, status } = body;
+  if (!id) return NextResponse.json({ error: 'id required' }, { status: 400 });
+  const { data, error } = await supabase.from('contact_reminders').update({ status }).eq('id', id).select().single();
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  return NextResponse.json(data);
 }
 
 export async function DELETE(req: NextRequest) {

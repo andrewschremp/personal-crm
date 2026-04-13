@@ -12,7 +12,7 @@ export interface Contact {
   linkedin_url?: string;
   // Relationship
   priority?: 'High' | 'Medium' | 'Low';
-  relationship_strength?: number;
+  relationship_strength?: string;
   contact_cadence?: string;
   next_follow_up?: string;
   // Personal
@@ -44,8 +44,9 @@ export interface Reminder {
   contact_id: string;
   created_at: string;
   reminder_date: string;
-  note: string;
-  completed: boolean;
+  message: string;
+  status: string;
+  reminder_type?: string;
 }
 
 export interface QueueItem {

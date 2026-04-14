@@ -72,7 +72,7 @@ export function ContactModal({ contact: initial, onClose }: { contact: Contact; 
         </div>
 
         <div className="overflow-y-auto flex-1 p-5">
-          {tab === 'details' && <ContactDetails contact={contact} onSave={setContact} />}
+          {tab === 'details' && <ContactDetails contact={contact} onSave={setContact} onCancel={onClose} />}
           {tab === 'interactions' && <ContactInteractions contactId={contact.id} />}
           {tab === 'reminders' && <ContactReminders contactId={contact.id} />}
         </div>
